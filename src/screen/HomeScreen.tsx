@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
-import { Settings, Wind, Headphones, PenLine, Moon, Smile, BookOpen } from "lucide-react-native";
+import { Settings, Wind, Smile, BookOpen } from "lucide-react-native";
 import { colors } from "../theme/color";
 import EyebrowLabel from "../components/EyebrowLabel";
 import ListRow from "../components/ListRow";
 import { getTodayQuote, type Quote } from "../services/quoteService";
-
-const activities = [
-  { key: "respirer", title: "respirer", subtitle: "5-20 min", icon: Wind },
-  { key: "ecouter", title: "écouter", subtitle: "libre", icon: Headphones },
-  { key: "ecrire", title: "écrire", subtitle: "sans limite", icon: PenLine },
-  { key: "rien", title: "ne rien faire", subtitle: "1-10 min", icon: Moon },
-];
 
 export default function HomeScreen({ navigation }: any) {
   const [quote, setQuote] = useState<Quote | null>(null);
@@ -44,21 +37,18 @@ export default function HomeScreen({ navigation }: any) {
 
       <View style={styles.eyebrowBlock}>
         <EyebrowLabel>fin de journée</EyebrowLabel>
-        <Text style={styles.subtitle}>choisir une transition</Text>
+        <Text style={styles.subtitle}>respirer</Text>
       </View>
 
       <View style={styles.list}>
-        {activities.map((activity) => (
-          <ListRow
-            key={activity.key}
-            title={activity.title}
-            subtitle={activity.subtitle}
-            icon={<activity.icon size={18} color={colors.inkMuted} />}
-            onPress={() =>
-              navigation.navigate("TimerSelect", { activity: activity.title })
-            }
-          />
-        ))}
+        <ListRow
+          title="respirer"
+          subtitle="timer, musique, pause"
+          icon={<Wind size={18} color={colors.inkMuted} />}
+          onPress={() =>
+            navigation.navigate("TimerSelect", { activity: "respirer" })
+          }
+        />
       </View>
 
       <View style={styles.sectionGap}>
