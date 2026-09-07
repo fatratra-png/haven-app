@@ -63,7 +63,7 @@ export function currentSoundKey(): SoundKey | null {
 async function destroyCurrentPlayer() {
   if (!player) return;
   try {
-    player.stop();
+    player.pause();
     player.remove();
   } catch {}
   player = null;
