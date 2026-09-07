@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
-  ActivityIndicator,
 } from "react-native";
 import { colors } from "../theme/color";
 import { fonts } from "../theme/typography";
@@ -13,32 +12,24 @@ import { getStoredUserId, storeUserId } from "../services/storage";
 import { createUser, getUser } from "../services/userService";
 
 export default function WelcomeScreen({ navigation }: any) {
-  const [checking, setChecking] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    checkExistingUser();
-  }, []);
-
-  async function checkExistingUser() {
-    const storedId = await getStoredUserId();
-    if (storedId) {
-      try {
-        await getUser(storedId);
-        navigation.replace("Home");
-        return;
-      } catch {}
-    }
-    setChecking(false);
-  }
 
   async function handleEnter() {
     if (submitting) return;
     setSubmitting(true);
     setError(null);
     try {
-      // TODO : replace by a real form
+      const storedId = await getStoredUserId();
+      if (storedId) {
+        try {
+          await getUser(storedId);
+          navigation.replace("Home");
+          return;
+        } catch {
+          // stored user no longer valid, create a new one
+        }
+      }
       const user = await createUser("Fitia", 22, "FEMALE");
       await storeUserId(user.id);
       navigation.replace("Home");
@@ -46,14 +37,6 @@ export default function WelcomeScreen({ navigation }: any) {
       setError("connexion impossible, réessayez.");
       setSubmitting(false);
     }
-  }
-
-  if (checking) {
-    return (
-      <SafeAreaView style={[styles.container, styles.centered]}>
-        <ActivityIndicator color={colors.slate} />
-      </SafeAreaView>
-    );
   }
 
   return (
